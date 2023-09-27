@@ -50,6 +50,7 @@ let personalSchema = yup.object().shape({
   fname: yup.string().required(" First name is required"),
   lname: yup.string().required(" Last name is required"),
 });
+
 let addressSchema = yup.object().shape({
   address: yup.string().required(" Address is required"),
 });

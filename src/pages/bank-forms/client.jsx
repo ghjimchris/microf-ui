@@ -38,26 +38,47 @@ let stepSchema = yup.object().shape({
     .string()
     .required("Phone number is required")
     .matches(/^[0-9]{10}$/, "Phone number is not valid"),
+  gender: yup.string().required("Gender is required"),
+  region: yup.string().required("Region is required"),
+  hometown: yup.string().required("Hometown is required"),
+  nationality: yup.string().required("Nationality is required"),
+  maritalStatus: yup.string().required("Marital Status is required"),
+  numberOfDependents: yup
+    .number()
+    .typeError("Number of dependents must be a number")
+    .required("Number of Dependents is required"),
+  identityType: yup.string().required("Form of Identity is required"),
+  idNumber: yup.string().required("ID Number is required"),
+  idExpiry: yup.date().required("ID Expiry is required"),
+  residentialAddress: yup.string().required("Residential Address is required"),
+  passportPicture: yup.mixed().required("Passport Picture is required"),
 });
-
 let personalSchema = yup.object().shape({
-  fname: yup.string().required("First name is required"),
-  lname: yup.string().required("Last name is required"),
+  enterpriseOrEmployee: yup.string().required("Name of Enterprise or Employee is required"),
+  position: yup.string(),
+  businessAddress: yup.string().required("Business Address is required"),
+  natureOfBusiness: yup.string().required("Nature of Business is required"),
+  gpsAddress: yup.string().required("GPS Address is required"),
+  monthlyIncome: yup.string().required("Average Monthly Income/Revenue is required"),
+  otherIncomes: yup.string(),
 });
 
-let addressSchema = yup.object().shape({
-  address: yup.string().required("Address is required"),
-});
+const regionsInGhana = [
+  "Ashanti",
+  "Brong-Ahafo",
+  "Central",
+  "Eastern",
+  "Greater Accra",
+  "Northern",
+  "Upper East",
+  "Upper West",
+  "Volta",
+  "Western",
+];
 
-const url =
-  /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm;
-
-let socialSchema = yup.object().shape({
-  fburl: yup
-    .string()
-    .required("Facebook URL is required")
-    .matches(url, "Facebook URL is not valid"),
-});
+const nationalities = ["Ghanaian", "Other"];
+const maritalStatusOptions = ["Married", "Single", "Divorced"];
+const identityOptions = ["Passport", "Ghana Card", "Driver's License", "Voter's ID Card"];
 
 const FormWizard = () => {
   const [stepNumber, setStepNumber] = useState(0);
@@ -202,7 +223,7 @@ const FormWizard = () => {
                     />
                     <Textinput
                       label="Date of Birth"
-                      type="Date"
+                      type="date"
                       placeholder="Date of Birth"
                       name="dateofbirth"
                       error={errors.dateofbirth}
@@ -225,76 +246,261 @@ const FormWizard = () => {
                       error={errors.phone}
                       register={register}
                     />
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="gender"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Gender
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="gender"
+                          name="gender"
+                          {...register("gender")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                        </select>
+                        {errors.gender && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.gender.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="region"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Region
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="region"
+                          name="region"
+                          {...register("region")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {regionsInGhana.map((region) => (
+                            <option key={region} value={region}>
+                              {region}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.region && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.region.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Textinput
+                      label="Hometown"
+                      type="text"
+                      placeholder="Hometown"
+                      name="hometown"
+                      error={errors.hometown}
+                      register={register}
+                    />
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="nationality"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Nationality
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="nationality"
+                          name="nationality"
+                          {...register("nationality")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {nationalities.map((nationality) => (
+                            <option key={nationality} value={nationality}>
+                              {nationality}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.nationality && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.nationality.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="maritalStatus"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Marital Status
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="maritalStatus"
+                          name="maritalStatus"
+                          {...register("maritalStatus")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {maritalStatusOptions.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.maritalStatus && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.maritalStatus.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Textinput
+                      label="Number of Dependents"
+                      type="number"
+                      placeholder="Number of Dependents"
+                      name="numberOfDependents"
+                      error={errors.numberOfDependents}
+                      register={register}
+                    />
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="identityType"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Form of Identity
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="identityType"
+                          name="identityType"
+                          {...register("identityType")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {identityOptions.map((identity) => (
+                            <option key={identity} value={identity}>
+                              {identity}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.identityType && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.identityType.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Textinput
+                      label="ID Number"
+                      type="text"
+                      placeholder="ID Number"
+                      name="idNumber"
+                      error={errors.idNumber}
+                      register={register}
+                    />
+                    <Textinput
+                      label="ID Expiry"
+                      type="date"
+                      placeholder="ID Expiry"
+                      name="idExpiry"
+                      error={errors.idExpiry}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Residential Address"
+                      type="text"
+                      placeholder="Residential Address"
+                      name="residentialAddress"
+                      error={errors.residentialAddress}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Passport Picture"
+                      type="file"
+                      name="passportPicture"
+                      error={errors.passportPicture}
+                      register={register}
+                    />
                   </div>
                 </div>
               )}
 
+              {/* ... Rest of the form steps ... */}
+              {/* STEP 2 */}
               {stepNumber === 1 && (
-                <div>
-                  <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
-                    <div className="md:col-span-2 col-span-1">
-                      <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
-                        Enter Your Personal info
-                      </h4>
-                    </div>
-                    <Textinput
-                      label="First name"
-                      type="text"
-                      placeholder="First name"
-                      name="fname"
-                      error={errors.fname}
-                      register={register}
-                    />
-                    <Textinput
-                      label="Last name"
-                      type="text"
-                      placeholder="Last name"
-                      name="lname"
-                      error={errors.lname}
-                      register={register}
-                    />
-                  </div>
-                </div>
-              )}
-              {stepNumber === 2 && (
-                <div>
-                  <div className="grid grid-cols-1 gap-5">
-                    <div className="">
-                      <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
-                        Enter Your Address
-                      </h4>
-                    </div>
-                    <Textarea
-                      label="Address"
-                      type="text"
-                      placeholder="Write Address"
-                      name="address"
-                      error={errors.address}
-                      register={register}
-                    />
-                  </div>
-                </div>
-              )}
-              {stepNumber === 3 && (
                 <div>
                   <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
                     <div className="lg:col-span-3 md:col-span-2 col-span-1">
                       <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
-                        Enter Your Social Media URL
+                        Business Details
                       </h4>
                     </div>
                     <Textinput
-                      label="Facebook"
+                      label="Name of Enterprise or Employee"
                       type="text"
-                      placeholder="https://www.facebook.com/profile"
-                      name="fburl"
-                      error={errors.fburl}
+                      placeholder="Name of Enterprise or Employee"
+                      name="enterpriseOrEmployee"
+                      error={errors.enterpriseOrEmployee}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Position (if Employee)"
+                      type="text"
+                      placeholder="Position (if Employee)"
+                      name="position"
+                      error={errors.position}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Business Address"
+                      type="text"
+                      placeholder="Business Address"
+                      name="businessAddress"
+                      error={errors.businessAddress}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Nature of Business"
+                      type="text"
+                      placeholder="Nature of Business"
+                      name="natureOfBusiness"
+                      error={errors.natureOfBusiness}
+                      register={register}
+                    />
+                    <Textinput
+                      label="GPS Address"
+                      type="text"
+                      placeholder="GPS Address"
+                      name="gpsAddress"
+                      error={errors.gpsAddress}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Average Monthly Income/Revenue"
+                      type="number"
+                      placeholder="Average Monthly Income/Revenue"
+                      name="monthlyIncome"
+                      error={errors.monthlyIncome}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Other Incomes"
+                      type="number"
+                      placeholder="Other Incomes"
+                      name="otherIncomes"
+                      error={errors.otherIncomes}
                       register={register}
                     />
                   </div>
                 </div>
               )}
 
+
+               {/* ... Rest of the form steps ... */}
               <div
                 className={`${
                   stepNumber > 0 ? "flex justify-between" : " text-right"
