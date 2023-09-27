@@ -16,8 +16,8 @@ export const menuItems = [
         childlink: "client",
       },
       {
-        childtitle: "Edit Client",
-        childlink: "ecommerce",
+        childtitle: "View Client",
+        childlink: "client-list",
       },
       
     ],

@@ -11,6 +11,8 @@ const BankingPage = lazy(() => import("./pages/dashboard/banking"));
 
 //client Forms
 const ClientForm = lazy(()=> import("./pages/bank-forms/client"));
+const ClientList = lazy(()=> import("./pages/bank-forms/client-list"));
+
 
 const Login = lazy(() => import("./pages/auth/login"));
 const Login2 = lazy(() => import("./pages/auth/login2"));
@@ -216,6 +218,9 @@ function App() {
    {/* //clinet nav   */}
   <Route path="/" element={<Layout />}>
     <Route path="/client" element={<ClientForm />} />
+  </Route>
+  <Route path="/" element={<Layout />}>
+    <Route path="/client-list" element={<ClientList/>} />
   </Route>
 
 
