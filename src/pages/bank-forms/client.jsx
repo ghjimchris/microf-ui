@@ -12,31 +12,30 @@ import * as yup from "yup";
 const steps = [
   {
     id: 1,
-    title: "Personal Details",
+    title: "Account Details",
   },
   {
     id: 2,
-    title: "Employment Details",
+    title: "Personal info-500",
   },
   {
     id: 3,
-    title: "Loan Details",
+    title: "Address",
   },
   {
     id: 4,
-    title: "Guarantor's Data",
+    title: "Social Links",
   },
 ];
 
-
 let stepSchema = yup.object().shape({
-  //username: yup.string().required(" User name is required"),
-  //fullname: yup.string().required("Full name is required"),
-  //email: yup.string().email("Email is not valid").required("Email is required"),
+  username: yup.string().required(" User name is required"),
+  fullname: yup.string().required("Full name is required"),
+  email: yup.string().email("Email is not valid").required("Email is required"),
   phone: yup
     .string()
     .required("Phone number is required")
-    .matches(/^[0-9]{10}$/, "Phone number is not valid"),
+    .matches(/^[0-9]{12}$/, "Phone number is not valid"),
   password: yup
     .string()
     .required("Password is required")
@@ -170,74 +169,40 @@ const FormWizard = () => {
                         Enter Your Account Details
                       </h4>
                     </div>
-                    
                     <Textinput
-                      label="Full Name"
+                      label="Username"
                       type="text"
-                      placeholder="Full Name"
-                      name="fullname"
+                      placeholder="Type your User Name"
+                      name="username"
+                      error={errors.username}
                       register={register}
                     />
-
                     <Textinput
-                      label="Date Of Birth"
-                      type="date"
-                      placeholder="Date Of Birth"
-                      name="dateofbirth"
-                      //error={errors.dateofbirth}
+                      label="Full name"
+                      type="text"
+                      placeholder="Full name"
+                      name="fullname"
+                      error={errors.fullname}
                       register={register}
                     />
-
                     <Textinput
                       label="Email"
                       type="email"
                       placeholder="Type your email"
                       name="email"
-                      //error={errors.email}
-                      register={register}
-                    />
-                     <Textinput
-                      label="Gender"
-                      type="text"
-                      placeholder="Type your email"
-                      name="gender"
-                      //error={errors.email}
-                      register={register}
-                    />
-                     <Textinput
-                      label="Home Town"
-                      type="text"
-                      placeholder="Home Town"
-                      name="hometown"
-                      //error={errors.email}
-                      register={register}
-                    />
-                    <Textinput
-                      label="Region"
-                      type="text"
-                      placeholder="Region"
-                      name="region"
-                      //error={errors.email}
-                      register={register}
-                    />
-                    <Textinput
-                      label="Nationality"
-                      type="text"
-                      placeholder="Nationality"
-                      name="nationality"
-                      //error={errors.email}
+                      error={errors.email}
                       register={register}
                     />
                     <InputGroup
                       label="Phone Number"
                       type="text"
-                      prepend="GH (+233)"
+                      prepend="MY (+6)"
                       placeholder="Phone Number"
                       name="phone"
-                      //error={errors.phone}
+                      error={errors.phone}
                       register={register}
                     />
-                    {/* <Textinput
+                    <Textinput
                       label="Password"
                       type="password"
                       placeholder="8+ characters, 1 capitat letter "
@@ -254,7 +219,7 @@ const FormWizard = () => {
                       error={errors.confirmpass}
                       register={register}
                       hasicon
-                    /> */}
+                    />
                   </div>
                 </div>
               )}
