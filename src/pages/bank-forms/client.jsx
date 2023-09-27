@@ -12,56 +12,53 @@ import * as yup from "yup";
 const steps = [
   {
     id: 1,
-    title: "Account Details",
+    title: "Personal Details",
   },
   {
     id: 2,
-    title: "Personal info-500",
+    title: "Business Details",
   },
   {
     id: 3,
-    title: "Address",
+    title: "Loan Details",
   },
   {
     id: 4,
-    title: "Social Links",
+    title: "Guarantor's Data",
   },
 ];
 
 let stepSchema = yup.object().shape({
-  username: yup.string().required(" User name is required"),
-  fullname: yup.string().required("Full name is required"),
+  firstname: yup.string().required("First name is required"),
+  middlename: yup.string().required("Middle name is required"),
+  surname: yup.string().required("Surname is required"),
+  dateofbirth: yup.date().required("Date of Birth is required"),
   email: yup.string().email("Email is not valid").required("Email is required"),
   phone: yup
     .string()
     .required("Phone number is required")
-    .matches(/^[0-9]{12}$/, "Phone number is not valid"),
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters"),
-  confirmpass: yup
-    .string()
-    .required("Confirm Password is required")
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
+    .matches(/^[0-9]{10}$/, "Phone number is not valid"),
 });
 
 let personalSchema = yup.object().shape({
-  fname: yup.string().required(" First name is required"),
-  lname: yup.string().required(" Last name is required"),
+  fname: yup.string().required("First name is required"),
+  lname: yup.string().required("Last name is required"),
 });
+
 let addressSchema = yup.object().shape({
-  address: yup.string().required(" Address is required"),
+  address: yup.string().required("Address is required"),
 });
+
 const url =
   /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm;
 
 let socialSchema = yup.object().shape({
   fburl: yup
     .string()
-    .required("Facebook url is required")
-    .matches(url, "Facebook url is not valid"),
+    .required("Facebook URL is required")
+    .matches(url, "Facebook URL is not valid"),
 });
+
 const FormWizard = () => {
   const [stepNumber, setStepNumber] = useState(0);
 
@@ -83,6 +80,7 @@ const FormWizard = () => {
     default:
       currentStepSchema = stepSchema;
   }
+
   useEffect(() => {
     // console.log("step number changed");
   }, [stepNumber]);
@@ -98,20 +96,29 @@ const FormWizard = () => {
     mode: "all",
   });
 
-  const onSubmit = (data) => {
-    // next step until last step . if last step then submit form
-    let totalSteps = steps.length;
-    const isLastStep = stepNumber === totalSteps - 1;
-    if (isLastStep) {
-      console.log(data);
-    } else {
-      setStepNumber(stepNumber + 1);
+  const onSubmit = async (data) => {
+    try {
+      // Validate the current step's schema
+      await currentStepSchema.validate(data, { abortEarly: false });
+
+      // next step until the last step, if it's the last step, then submit the form
+      let totalSteps = steps.length;
+      const isLastStep = stepNumber === totalSteps - 1;
+      if (isLastStep) {
+        console.log(data);
+      } else {
+        setStepNumber(stepNumber + 1);
+      }
+    } catch (error) {
+      // Handle validation errors
+      console.error(error);
     }
   };
 
   const handlePrev = () => {
     setStepNumber(stepNumber - 1);
   };
+
   return (
     <div>
       <Card title="Vertical">
@@ -121,7 +128,7 @@ const FormWizard = () => {
               {steps.map((item, i) => (
                 <div className="relative z-[1] flex-1 last:flex-none" key={i}>
                   <div
-                    className={`   ${
+                    className={`${
                       stepNumber >= i
                         ? "bg-slate-900 text-white ring-slate-900 dark:bg-slate-900 dark:ring-slate-700  dark:ring-offset-slate-500 ring-offset-2"
                         : "bg-white ring-slate-900 ring-opacity-70  text-slate-900 dark:text-slate-300 text-opacity-70 dark:bg-slate-700 dark:ring-slate-700"
@@ -170,19 +177,35 @@ const FormWizard = () => {
                       </h4>
                     </div>
                     <Textinput
-                      label="Username"
+                      label="First Name"
                       type="text"
-                      placeholder="Type your User Name"
-                      name="username"
-                      error={errors.username}
+                      placeholder="First Name"
+                      name="firstname"
+                      error={errors.firstname}
                       register={register}
                     />
                     <Textinput
-                      label="Full name"
+                      label="Middle Name"
                       type="text"
-                      placeholder="Full name"
-                      name="fullname"
-                      error={errors.fullname}
+                      placeholder="Middle Name"
+                      name="middlename"
+                      error={errors.middlename}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Surname"
+                      type="text"
+                      placeholder="Surname"
+                      name="surname"
+                      error={errors.surname}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Date of Birth"
+                      type="Date"
+                      placeholder="Date of Birth"
+                      name="dateofbirth"
+                      error={errors.dateofbirth}
                       register={register}
                     />
                     <Textinput
@@ -196,29 +219,11 @@ const FormWizard = () => {
                     <InputGroup
                       label="Phone Number"
                       type="text"
-                      prepend="MY (+6)"
+                      prepend="MY (+233)"
                       placeholder="Phone Number"
                       name="phone"
                       error={errors.phone}
                       register={register}
-                    />
-                    <Textinput
-                      label="Password"
-                      type="password"
-                      placeholder="8+ characters, 1 capitat letter "
-                      name="password"
-                      error={errors.password}
-                      hasicon
-                      register={register}
-                    />
-                    <Textinput
-                      label="Confirm Password"
-                      type="password"
-                      placeholder="Password"
-                      name="confirmpass"
-                      error={errors.confirmpass}
-                      register={register}
-                      hasicon
                     />
                   </div>
                 </div>
@@ -229,7 +234,7 @@ const FormWizard = () => {
                   <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
                     <div className="md:col-span-2 col-span-1">
                       <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
-                        Enter Your Personal info-500
+                        Enter Your Personal info
                       </h4>
                     </div>
                     <Textinput
@@ -275,7 +280,7 @@ const FormWizard = () => {
                   <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
                     <div className="lg:col-span-3 md:col-span-2 col-span-1">
                       <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
-                        Enter Your Address
+                        Enter Your Social Media URL
                       </h4>
                     </div>
                     <Textinput
