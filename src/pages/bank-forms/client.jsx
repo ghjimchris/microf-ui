@@ -74,6 +74,33 @@ let addressSchema = yup.object().shape({
   purposeOfLoan: yup.string().required("Purpose of Loan is required"),
 });
 
+// Define a schema for the Guarantors step
+let socialSchema = yup.object().shape({
+  firstname: yup.string().required("First name is required"),
+  middlename: yup.string().required("Middle name is required"),
+  surname: yup.string().required("Surname is required"),
+  dateofbirth: yup.date().required("Date of Birth is required"),
+  email: yup.string().email("Email is not valid").required("Email is required"),
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10}$/, "Phone number is not valid"),
+  gender: yup.string().required("Gender is required"),
+  region: yup.string().required("Region is required"),
+  hometown: yup.string().required("Hometown is required"),
+  nationality: yup.string().required("Nationality is required"),
+  maritalStatus: yup.string().required("Marital Status is required"),
+  numberOfDependents: yup
+    .number()
+    .typeError("Number of dependents must be a number")
+    .required("Number of Dependents is required"),
+  identityType: yup.string().required("Form of Identity is required"),
+  idNumber: yup.string().required("ID Number is required"),
+  idExpiry: yup.date().required("ID Expiry is required"),
+  residentialAddress: yup.string().required("Residential Address is required"),
+});
+
+
 const regionsInGhana = [
   "Ashanti",
   "Ahafo",
@@ -519,7 +546,7 @@ const FormWizard = () => {
                 {/* STEP 3 */}
                 {stepNumber === 2 && (
                 <div>
-                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                  <div className="grid lg:grid-cols-1 md:grid-cols-1 grid-cols-1 gap-5">
                     <div className="lg:col-span-3 md:col-span-2 col-span-1">
                       <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
                         Loan Details
@@ -551,6 +578,250 @@ const FormWizard = () => {
                   </div>
                 </div>
               )}
+                
+              
+              {/* STEP 4 (Guarantors) */}
+              {stepNumber === 3 && (
+                <div>
+                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                    <div className="lg:col-span-3 md:col-span-2 col-span-1">
+                      <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
+                        Guarantor's Data
+                      </h4>
+                    </div>
+                    <Textinput
+                      label="First Name"
+                      type="text"
+                      placeholder="First Name"
+                      name="firstname"
+                      error={errors.firstname}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Middle Name"
+                      type="text"
+                      placeholder="Middle Name"
+                      name="middlename"
+                      error={errors.middlename}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Surname"
+                      type="text"
+                      placeholder="Surname"
+                      name="surname"
+                      error={errors.surname}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Date of Birth"
+                      type="date"
+                      placeholder="Date of Birth"
+                      name="dateofbirth"
+                      error={errors.dateofbirth}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Email"
+                      type="email"
+                      placeholder="Type your email"
+                      name="email"
+                      error={errors.email}
+                      register={register}
+                    />
+                    <InputGroup
+                      label="Phone Number"
+                      type="text"
+                      prepend="MY (+233)"
+                      placeholder="Phone Number"
+                      name="phone"
+                      error={errors.phone}
+                      register={register}
+                    />
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="gender"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Gender
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="gender"
+                          name="gender"
+                          {...register("gender")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                        </select>
+                        {errors.gender && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.gender.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="region"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Region
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="region"
+                          name="region"
+                          {...register("region")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {regionsInGhana.map((region) => (
+                            <option key={region} value={region}>
+                              {region}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.region && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.region.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Textinput
+                      label="Hometown"
+                      type="text"
+                      placeholder="Hometown"
+                      name="hometown"
+                      error={errors.hometown}
+                      register={register}
+                    />
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="nationality"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Nationality
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="nationality"
+                          name="nationality"
+                          {...register("nationality")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {nationalities.map((nationality) => (
+                            <option key={nationality} value={nationality}>
+                              {nationality}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.nationality && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.nationality.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="maritalStatus"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Marital Status
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="maritalStatus"
+                          name="maritalStatus"
+                          {...register("maritalStatus")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {maritalStatusOptions.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.maritalStatus && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.maritalStatus.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Textinput
+                      label="Number of Dependents"
+                      type="number"
+                      placeholder="Number of Dependents"
+                      name="numberOfDependents"
+                      error={errors.numberOfDependents}
+                      register={register}
+                    />
+                    <div className="md:col-span-1 col-span-1">
+                      <label
+                        htmlFor="identityType"
+                        className="block text-slate-900 dark:text-slate-300 text-base font-medium mb-2"
+                      >
+                        Form of Identity
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="identityType"
+                          name="identityType"
+                          {...register("identityType")}
+                          className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        >
+                          {identityOptions.map((identity) => (
+                            <option key={identity} value={identity}>
+                              {identity}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.identityType && (
+                          <p className="mt-2 text-red-500 text-sm">
+                            {errors.identityType.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Textinput
+                      label="ID Number"
+                      type="text"
+                      placeholder="ID Number"
+                      name="idNumber"
+                      error={errors.idNumber}
+                      register={register}
+                    />
+                    <Textinput
+                      label="ID Expiry"
+                      type="date"
+                      placeholder="ID Expiry"
+                      name="idExpiry"
+                      error={errors.idExpiry}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Residential Address"
+                      type="text"
+                      placeholder="Residential Address"
+                      name="residentialAddress"
+                      error={errors.residentialAddress}
+                      register={register}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* ... Rest of the form steps ... */}
+            </form>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
 
                {/* ... Rest of the form steps ... */}
               <div
