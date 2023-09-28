@@ -30,7 +30,7 @@ const steps = [
 
 let stepSchema = yup.object().shape({
   firstname: yup.string().required("First name is required"),
-  middlename: yup.string().required("Middle name is required"),
+  middlename: yup.string()("Middle name is required"),
   surname: yup.string().required("Surname is required"),
   dateofbirth: yup.date().required("Date of Birth is required"),
   email: yup.string().email("Email is not valid").required("Email is required"),
@@ -216,7 +216,7 @@ const FormWizard = () => {
                       type="text"
                       placeholder="Middle Name"
                       name="middlename"
-                      error={errors.middlename}
+                      //error={errors.middlename}
                       register={register}
                     />
                     <Textinput
