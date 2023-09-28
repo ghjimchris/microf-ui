@@ -65,15 +65,21 @@ let personalSchema = yup.object().shape({
 
 const regionsInGhana = [
   "Ashanti",
-  "Brong-Ahafo",
+  "Ahafo",
+  "Bono",
+  "Bono East",
   "Central",
   "Eastern",
   "Greater Accra",
+  "North East",
   "Northern",
+  "Oti",
+  "Savannah",
   "Upper East",
   "Upper West",
   "Volta",
   "Western",
+  "Western North Region",
 ];
 
 const nationalities = ["Ghanaian", "Other"];
