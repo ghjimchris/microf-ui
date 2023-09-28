@@ -30,7 +30,7 @@ const steps = [
 
 let stepSchema = yup.object().shape({
   firstname: yup.string().required("First name is required"),
-  middlename: yup.string()("Middle name is required"),
+  middlename: yup.string().required("Middle name is required"),
   surname: yup.string().required("Surname is required"),
   dateofbirth: yup.date().required("Date of Birth is required"),
   email: yup.string().email("Email is not valid").required("Email is required"),
@@ -61,6 +61,17 @@ let personalSchema = yup.object().shape({
   gpsAddress: yup.string().required("GPS Address is required"),
   monthlyIncome: yup.string().required("Average Monthly Income/Revenue is required"),
   otherIncomes: yup.string(),
+});
+let addressSchema = yup.object().shape({
+  amountOfLoan: yup
+    .number()
+    .typeError("Amount of loan required must be a number")
+    .required("Amount of loan required is required"),
+  proposedRepaymentPeriod: yup
+    .number()
+    .typeError("Proposed Repayment Period must be a number")
+    .required("Proposed Repayment Period is required"),
+  purposeOfLoan: yup.string().required("Purpose of Loan is required"),
 });
 
 const regionsInGhana = [
@@ -216,7 +227,7 @@ const FormWizard = () => {
                       type="text"
                       placeholder="Middle Name"
                       name="middlename"
-                      //error={errors.middlename}
+                      error={errors.middlename}
                       register={register}
                     />
                     <Textinput
@@ -505,6 +516,41 @@ const FormWizard = () => {
                 </div>
               )}
 
+                {/* STEP 3 */}
+                {stepNumber === 2 && (
+                <div>
+                  <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                    <div className="lg:col-span-3 md:col-span-2 col-span-1">
+                      <h4 className="text-base text-slate-800 dark:text-slate-300 mb-6">
+                        Loan Details
+                      </h4>
+                    </div>
+                    <Textinput
+                      label="Amount of Loan Required"
+                      type="number"
+                      placeholder="Amount of Loan Required"
+                      name="amountOfLoan"
+                      error={errors.amountOfLoan}
+                      register={register}
+                    />
+                    <Textinput
+                      label="Proposed Repayment Period (months)"
+                      type="number"
+                      placeholder="Proposed Repayment Period (months)"
+                      name="proposedRepaymentPeriod"
+                      error={errors.proposedRepaymentPeriod}
+                      register={register}
+                    />
+                    <Textarea
+                      label="Purpose of Loan"
+                      placeholder="Purpose of Loan"
+                      name="purposeOfLoan"
+                      error={errors.purposeOfLoan}
+                      register={register}
+                    />
+                  </div>
+                </div>
+              )}
 
                {/* ... Rest of the form steps ... */}
               <div
