@@ -8,6 +8,7 @@ import Icon from "@/components/ui/Icon";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import fetchDataFromBackend from "../../store/backend";
 
 const steps = [
   {
@@ -126,6 +127,9 @@ const identityOptions = ["Passport", "Ghana Card", "Driver's License", "Voter's 
 
 const FormWizard = () => {
   const [stepNumber, setStepNumber] = useState(0);
+  const [backendData, setBackendData] = useState(null); 
+
+  
 
   // find current step schema
   let currentStepSchema;
@@ -147,7 +151,8 @@ const FormWizard = () => {
   }
 
   useEffect(() => {
-    // console.log("step number changed");
+   
+    fetchData();
   }, [stepNumber]);
 
   const {
@@ -184,6 +189,16 @@ const FormWizard = () => {
     setStepNumber(stepNumber - 1);
   };
 
+  async function fetchData() {
+    try {
+      const data = await fetchDataFromBackend(); // Fetch data using your function
+      setBackendData(data); // Update state with fetched data
+    } catch (error) {
+      // Handle errors
+      console.error('Error fetching data:', error);
+    }
+  };
+  
   return (
     <div>
       <Card title="Add Client">
@@ -814,16 +829,9 @@ const FormWizard = () => {
                 </div>
               )}
 
-              {/* ... Rest of the form steps ... */}
-            </form>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-};
+        
 
-               {/* ... Rest of the form steps ... */}
+             
               <div
                 className={`${
                   stepNumber > 0 ? "flex justify-between" : " text-right"
