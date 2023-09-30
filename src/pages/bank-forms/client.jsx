@@ -125,11 +125,75 @@ const nationalities = ["Ghanaian", "Other"];
 const maritalStatusOptions = ["Married", "Single", "Divorced"];
 const identityOptions = ["Passport", "Ghana Card", "Driver's License", "Voter's ID Card"];
 
+
+
 const FormWizard = () => {
   const [stepNumber, setStepNumber] = useState(0);
-  const [backendData, setBackendData] = useState(null); 
+  // const [backendData, setBackendData] = useState(null); 
 
+  //I did this too
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dob, setDob] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedMaritalStatus, setSelectedMaritalStatus] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [hometown, setHometown] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState("");
+  const [residentialAddress, setResidentialAddress] = useState("");
+  const [selectedNationality, setSelectedNationality] = useState("");
+  const [selectedFormOfIdentity, setSelectedFormOfIdentity] = useState("");
+  const [idNo, setIdNo] = useState("");
+  const [idExpiryDate, setIdExpiryDate] = useState("");
+  const [gpsAddress, setGpsAddress] = useState("");
+  const [noOfDependents, setNoOfDependents] = useState("");
+  const [images, setImages] = useState(null);
+
+  const handleFileChange = (e) =>{
+    const file = e.target.files[0];
+    setImages(file);
+  }
+   
+  //Handle and post customer's data to the backend (this is what I did)
+  const handleCustomerSubmit = async (event) => {
+    event.preventDefault();
+
+    //construct userData
+    const userData = {
+      firstName,
+      lastName, 
+      dob, 
+      gender : selectedGender, 
+      maritalStatus : selectedMaritalStatus, 
+      region : selectedRegion,
+      residentialAddress,
+      hometown,
+      phoneNo, 
+      nationality : selectedNationality, 
+      formOfIdentity : selectedFormOfIdentity, 
+      idNo, 
+      idExpiryDate,
+      gpsAddress
+    }
+
+    const formData = new FormData();
+    formData.append('images', images);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/customer/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+    } catch (error) {
+      console.error('error uploading image');
+    }
+  }
   
+
 
   // find current step schema
   let currentStepSchema;
@@ -154,6 +218,8 @@ const FormWizard = () => {
    
     fetchData();
   }, [stepNumber]);
+
+ 
 
   const {
     register,
@@ -191,7 +257,7 @@ const FormWizard = () => {
 
   async function fetchData() {
     try {
-      const data = await fetchDataFromBackend(); // Fetch data using your function
+      const data = await fetch(""); // Fetch data using your function
       setBackendData(data); // Update state with fetched data
     } catch (error) {
       // Handle errors
@@ -247,7 +313,7 @@ const FormWizard = () => {
           </div>
 
           <div className="conten-box lg:col-span-9 col-span-12">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onClick={handleCustomerSubmit} encType="multipart/form-data">
               {stepNumber === 0 && (
                 <div>
                   <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
@@ -260,6 +326,8 @@ const FormWizard = () => {
                       label="First Name"
                       type="text"
                       placeholder="First Name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
                       name="firstname"
                       error={errors.firstname}
                       register={register}
@@ -276,6 +344,8 @@ const FormWizard = () => {
                       label="Surname"
                       type="text"
                       placeholder="Surname"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
                       name="surname"
                       error={errors.surname}
                       register={register}
@@ -284,6 +354,8 @@ const FormWizard = () => {
                       label="Date of Birth"
                       type="date"
                       placeholder="Date of Birth"
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
                       name="dateofbirth"
                       error={errors.dateofbirth}
                       register={register}
@@ -301,6 +373,8 @@ const FormWizard = () => {
                       type="text"
                       prepend="MY (+233)"
                       placeholder="Phone Number"
+                      value={phoneNo}
+                      onChange={(e) => setPhoneNo(e.target.value)}
                       name="phone"
                       error={errors.phone}
                       register={register}
@@ -316,6 +390,8 @@ const FormWizard = () => {
                         <select
                           id="gender"
                           name="gender"
+                          multiple value={selectedGender}
+                          onChange={(e) => setSelectedGender(Array.from(e.target.selectedOptions, (option) => option.value))}
                           {...register("gender")}
                           className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
                         >
@@ -340,6 +416,8 @@ const FormWizard = () => {
                         <select
                           id="region"
                           name="region"
+                          multiple value={selectedRegion}
+                          onChange={(e) => setSelectedRegion(Array.from(e.target.selectedOptions, (option) => option.value))}
                           {...register("region")}
                           className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
                         >
@@ -361,6 +439,8 @@ const FormWizard = () => {
                       type="text"
                       placeholder="Hometown"
                       name="hometown"
+                      value={selectedGender}
+                      onChange={(e) => setHometown(e.target.value)}
                       error={errors.hometown}
                       register={register}
                     />
@@ -375,6 +455,8 @@ const FormWizard = () => {
                         <select
                           id="nationality"
                           name="nationality"
+                          multiple value={selectedNationality}
+                          onChange={(e) => setSelectedNationality(Array.from(e.target.selectedOptions, (option) => option.value))}
                           {...register("nationality")}
                           className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
                         >
@@ -402,6 +484,8 @@ const FormWizard = () => {
                         <select
                           id="maritalStatus"
                           name="maritalStatus"
+                          multiple value={selectedMaritalStatus}
+                          onChange={(e) => setSelectedMaritalStatus(Array.from(e.target.selectedOptions, (option) => option.value))}
                           {...register("maritalStatus")}
                           className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
                         >
@@ -423,6 +507,8 @@ const FormWizard = () => {
                       type="number"
                       placeholder="Number of Dependents"
                       name="numberOfDependents"
+                      value={noOfDependents}
+                      onChange={(e) => setNoOfDependents(e.target.value)}
                       error={errors.numberOfDependents}
                       register={register}
                     />
@@ -437,6 +523,8 @@ const FormWizard = () => {
                         <select
                           id="identityType"
                           name="identityType"
+                          multiple value={selectedFormOfIdentity}
+                          onChange={(e) => setSelectedFormOfIdentity(Array.from(e.target.selectedOptions, (option) => option.value))}
                           {...register("identityType")}
                           className="w-full border-gray-300 dark:border-slate-700 focus:ring-slate-900 dark:focus:ring-slate-300 focus:border-slate-900 dark:focus:border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
                         >
@@ -458,6 +546,8 @@ const FormWizard = () => {
                       type="text"
                       placeholder="ID Number"
                       name="idNumber"
+                      value={idNo}
+                      onChange={(e) => setIdNo(e.target.value)}
                       error={errors.idNumber}
                       register={register}
                     />
@@ -466,6 +556,8 @@ const FormWizard = () => {
                       type="date"
                       placeholder="ID Expiry"
                       name="idExpiry"
+                      value={idExpiryDate}
+                      onChange={(e) => setIdExpiryDate(e.target.value)}
                       error={errors.idExpiry}
                       register={register}
                     />
@@ -480,6 +572,8 @@ const FormWizard = () => {
                     <Textinput
                       label="Passport Picture"
                       type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
                       name="passportPicture"
                       error={errors.passportPicture}
                       register={register}
