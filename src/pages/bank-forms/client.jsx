@@ -31,7 +31,7 @@ const steps = [
 
 let stepSchema = yup.object().shape({
   firstname: yup.string().required("First name is required"),
-  middlename: yup.string().required("Middle name is required"),
+  middlename: yup.string().notRequired(""),
   surname: yup.string().required("Surname is required"),
   dateofbirth: yup.date().required("Date of Birth is required"),
   email: yup.string().email("Email is not valid").required("Email is required"),
@@ -198,7 +198,7 @@ const FormWizard = () => {
       console.error('Error fetching data:', error);
     }
   };
-  
+
   return (
     <div>
       <Card title="Add Client">
